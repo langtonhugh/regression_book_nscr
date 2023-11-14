@@ -1,3 +1,7 @@
+# Data.
+data/*
+book/*
+
 # History files
 .Rhistory
 .Rapp.history
