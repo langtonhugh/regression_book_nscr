@@ -43,7 +43,7 @@ glimpse(peace_df)
 peace_df <- peace_df %>% 
   mutate(time_diff = (faildate-cfdate)/365)
 
-# Plot. Does not match - not sure why.
+# Plot. 
 peace_df %>% 
   ggplot(data = .) +
   geom_histogram(mapping = aes(x = delay), bins = 10) +

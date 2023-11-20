@@ -2,6 +2,9 @@
 data/*
 book/*
 
+!data/readme.txt
+!book/readme.txt
+
 # History files
 .Rhistory
 .Rapp.history
