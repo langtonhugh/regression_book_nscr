@@ -1,6 +1,6 @@
 # NSC-R reading group
 
-This is a repository for the NSC-R reading group on [Regression and Other Stories](https://avehtari.github.io/ROS-Examples/index.html).
+This is a repository for the [NSC-R](https://nscrweb.netlify.app/) reading group on [Regression and Other Stories](https://avehtari.github.io/ROS-Examples/index.html).
 
 You can contribute your own scripts (complete, incomplete, whatever) to the **scripts/contributors** subfolder.
 
