@@ -41,7 +41,7 @@ mod1 <- lm(vote ~ growth, data = elections_data)
 
 summary(mod1)
 
-# Plot predicted values #### HERE I STOPPED
+# Plot predicted values
 
 plot(elections_data$growth, elections_data$vote, xlab = "Economic Growth", ylab = "Vote Share")
 abline(coef(mod1), col = "red")
