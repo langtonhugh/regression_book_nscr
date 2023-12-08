@@ -177,28 +177,34 @@ lm_2 <- lm(y ~ pretreat_x + treat_x, data=sim_data)
 summary(lm_2)
 
 # Coefficients.
-coefficients(lm_2)
+lm2_coef <- round(coefficients(lm_2), 2)
 
 # Define the value label position.
 x_label <- max(sim_data$pretreat_x)/2
 
-# Plot based on the regression. Completely bananas way of doing it, probably.
-ggplot(data = sim_data) +
+# Plot based on the regression. 
+basic_gg <- ggplot(data = sim_data) +
   geom_point(mapping = aes(x = pretreat_x, y = y, colour = treat_x), alpha = 0.6) +
-  geom_abline(intercept = coefficients(lm_2)[["(Intercept)"]],
-              slope     = coefficients(lm_2)[["pretreat_x"]]) +
-  geom_abline(intercept = coefficients(lm_2)[["(Intercept)"]] + coefficients(lm_2)[["treat_x1"]],
-              slope     = coefficients(lm_2)[["pretreat_x"]]) +
+  # Add regression lines.
+  geom_abline(intercept = lm2_coef[["(Intercept)"]],
+              slope     = lm2_coef[["pretreat_x"]],
+              linetype  = "solid") +
+  geom_abline(intercept = lm2_coef[["(Intercept)"]] + lm2_coef[["treat_x1"]],
+              slope     = lm2_coef[["pretreat_x"]],
+              linetype  = "solid") 
+
+basic_gg
+
+# Add some labels. Completely bananas way of doing it, probably.
+basic_gg +
   geom_segment(x = x_label,
                xend = x_label,
-               y    = coefficients(lm_2)[["(Intercept)"]] + x_label*coefficients(lm_2)[["pretreat_x"]],
-               yend = coefficients(lm_2)[["(Intercept)"]] + x_label*coefficients(lm_2)[["pretreat_x"]] + coefficients(lm_2)[["treat_x1"]],
-               arrow = arrow(length = unit(0.03, "npc"), ends = "both"),
-               colour = "grey70") +
+               y    = lm2_coef[["(Intercept)"]] + x_label*lm2_coef[["pretreat_x"]],
+               yend = lm2_coef[["(Intercept)"]] + x_label*lm2_coef[["pretreat_x"]] + coefficients(lm_2)[["treat_x1"]],
+               arrow = arrow(length = unit(0.03, "npc"), ends = "both")) +
   geom_text(x = x_label*1.4,
-            y = coefficients(lm_2)[["(Intercept)"]] + x_label*coefficients(lm_2)[["pretreat_x"]]*0.9,
-            label = "Estimated effect",
-            colour = "grey70")
+            y = lm2_coef[["(Intercept)"]] + x_label*lm2_coef[["pretreat_x"]]*0.9,
+            label = paste("Est. effect:", lm2_coef[["treat_x1"]]))
 
 # End.
 
