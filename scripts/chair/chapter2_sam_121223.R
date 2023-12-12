@@ -20,7 +20,7 @@ library(sf)
 # - Difference between visualisation issues and then scrutiny over a composite
 #   measure (section 2.1).
 # - Validity and reliability: any examples from people's work?
-# - What did people think of the plots? I had some issues (e.g., 2.7).
+# - What did people think of the plots? I had some queries (e.g., 2.5, 2.7).
 # - Grammar of Graphics-style approach (but without ggplot2 code).
 # - Plotting regression results.
 
@@ -64,14 +64,15 @@ income_hdi_df %>%
 # (3) Names plots ==============================================================
 
 # Names plot.
-names_df <- read.csv("data/ROS-Examples-master/Names/data/allnames_clean.csv")
+names_df <- read.csv("data/ROS-Examples-master/Names/data/allnames_clean.csv") %>% 
+  as_tibble()
 
 # Make it long and filter.
 names_long_df <- names_df %>% 
   pivot_longer(cols = c(-X, -name, -sex), names_to = "year", values_to = "number",
                names_prefix = "X") %>% 
   mutate(year = as.numeric(year),
-         last_letter = str_sub(name, start= -1)) 
+         last_letter = str_sub(name, start = -1)) 
 
 # Figure 2.7.
 names_long_df %>% 
@@ -128,6 +129,7 @@ sim_data <- data.frame(pretreat_x, treat_x, y) %>%
 
 # View it.
 glimpse(sim_data)
+head(sim_data)
 
 # Basic mean difference between treatment-control groups in Y.
 sim_data %>% 
@@ -135,7 +137,7 @@ sim_data %>%
   summarize(mean_values = mean(y))
 
 # Plot of treatment-control differences in the Y.
-# We add a Mean Standard error from bootstrap.
+# We add a mean standard error from bootstrap.
 ggplot(data = sim_data,
        mapping = aes(x = treat_x, y = y)) +
   # geom_boxplot(fill = NA) +
@@ -143,28 +145,21 @@ ggplot(data = sim_data,
   stat_summary(fun.data = "mean_cl_boot", colour = "tomato", linewidth = 1) 
 
 # Simple test of treatment-control differences in the Y.
-lm_1 <- lm(y ~ treat_x, data=sim_data)
+lm_1 <- lm(y ~ treat_x, data = sim_data)
 
 # Results.
 summary(lm_1) 
+# tidy(lm_1)
 
 # Pull out information.
 lm_1$coefficients
 
-# Broom.
-tidy(lm_1)
-
-# But do treatment-control groups differ in the pre-treatment?
-sim_data %>% 
-  group_by(treat_x) %>% 
-  summarize(mean_pretreat = mean(pretreat_x))
-
-# Relationship between the pre-treatment and Y.
+# But what's the relationship between the pre-treatment and Y?
 ggplot(data = sim_data) +
   geom_point(mapping = aes(x = pretreat_x, y = y))
 
-# Assessing treatment-control differences in the Y while grouping
-# for the pre-treatment differences.
+# Assessing the relationship between pre-treatment and Y while grouping for
+# the actual treatment.
 ggplot(data = sim_data,
        mapping = aes(x = pretreat_x, y = y, colour = treat_x)) +
   geom_point(alpha = 0.6) +
@@ -174,14 +169,11 @@ ggplot(data = sim_data,
 # the pre-treatment X.
 lm_2 <- lm(y ~ pretreat_x + treat_x, data=sim_data)
 
-# SUmmaries.
+# Summaries.
 summary(lm_2)
 
 # Coefficients.
 lm2_coef <- round(coefficients(lm_2), 2)
-
-# Define the value label position.
-x_label <- max(sim_data$pretreat_x)/2
 
 # Plot based on the regression. 
 basic_gg <- ggplot(data = sim_data) +
@@ -197,6 +189,11 @@ basic_gg <- ggplot(data = sim_data) +
 basic_gg
 
 # Add some labels. Completely bananas way of doing it, probably.
+
+# First, define the value label position.
+x_label <- max(sim_data$pretreat_x)/2
+
+# Then add them.
 basic_gg +
   geom_segment(x = x_label,
                xend = x_label,
@@ -208,10 +205,3 @@ basic_gg +
             label = paste("Est. effect:", lm2_coef[["treat_x1"]]))
 
 # End.
-
-
-
-
-
-
-
