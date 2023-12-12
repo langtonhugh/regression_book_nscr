@@ -16,6 +16,7 @@ library(maps)
 library(sf)
 
 # (0) General discussion points ================================================
+# - New GitHub repo intro.
 # - Difference between visualisation issues and then scrutiny over a composite
 #   measure (section 2.1).
 # - Validity and reliability: any examples from people's work?
@@ -153,12 +154,12 @@ lm_1$coefficients
 # Broom.
 tidy(lm_1)
 
-# But do treatment-control groups differ in the pretreatment?
+# But do treatment-control groups differ in the pre-treatment?
 sim_data %>% 
   group_by(treat_x) %>% 
   summarize(mean_pretreat = mean(pretreat_x))
 
-# Relationship between the pretreatment and Y.
+# Relationship between the pre-treatment and Y.
 ggplot(data = sim_data) +
   geom_point(mapping = aes(x = pretreat_x, y = y))
 
