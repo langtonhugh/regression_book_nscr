@@ -35,6 +35,10 @@ states_sf <- maps::map("state",
                        fill = TRUE) %>% 
   st_as_sf()
 
+# Plot.
+ggplot(data = states_sf) +
+  geom_sf()
+
 # Join the HDI data to the spatial polygons.
 state_hdi_sf <- hdi_df %>% 
   mutate(ID = str_to_lower(state)) %>% 
@@ -58,8 +62,9 @@ income_hdi_df <- income_df %>%
 # Scatterplots.
 income_hdi_df %>% 
   filter(st_year == 2000) %>%
-  ggplot(data = .) +
+  ggplot() +
   geom_text(mapping = aes(x = st_income, y = hdi, label = st_stateabb))
+  # geom_point(mapping = aes(x = st_income, y = hdi))
 
 # (3) Names plots ==============================================================
 
@@ -87,9 +92,9 @@ names_long_df %>%
   ungroup() %>% 
   ggplot(data = .) +
   geom_col(mapping = aes(x = last_letter, y = prop_counts,
-                         fill = as.factor(year)),
-           position = "dodge") 
-  # facet_wrap(~year)
+                         fill = as.factor(year)), 
+           position = "dodge") +
+  facet_wrap(~year)
 
 # Line graph.
 names_long_df %>% 
